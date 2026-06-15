@@ -1,0 +1,448 @@
+/* =========================
+GLOBAL
+========================= */
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Tahoma, Arial, sans-serif;
+background:#111;
+color:#fff;
+direction:rtl;
+}
+
+.app{
+max-width:900px;
+margin:0 auto;
+padding:16px;
+}
+
+/* =========================
+CARD
+========================= */
+
+.invoice-card{
+background:#1a1a1a;
+border:1px solid #2b2b2b;
+border-radius:16px;
+padding:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+/* =========================
+HEADER
+========================= */
+
+.header{
+text-align:center;
+margin-bottom:18px;
+}
+
+.header h1{
+margin:0;
+font-size:28px;
+color:#f5f5f5;
+}
+
+.header h2{
+margin:8px 0;
+color:#d7d7d7;
+font-size:20px;
+}
+
+.date-row{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+flex-wrap:wrap;
+color:#bbb;
+margin-top:10px;
+}
+
+.separator{
+color:#555;
+}
+
+/* =========================
+CUSTOMER
+========================= */
+
+.customer-box{
+display:flex;
+align-items:center;
+gap:10px;
+background:#222;
+padding:12px;
+border-radius:12px;
+margin-bottom:16px;
+}
+
+.customer-box label{
+white-space:nowrap;
+}
+
+.customer-box input{
+flex:1;
+}
+
+/* =========================
+INPUTS
+========================= */
+
+input,
+textarea{
+background:#0f0f0f;
+color:#fff;
+border:1px solid #333;
+outline:none;
+border-radius:10px;
+padding:10px 12px;
+font-size:15px;
+}
+
+input:focus,
+textarea:focus{
+border-color:#0ea5e9;
+}
+
+.sms-box{
+width:100%;
+min-height:140px;
+margin-top:15px;
+resize:vertical;
+}
+
+/* =========================
+TABLE
+========================= */
+
+.table-head,
+.service-row{
+display:grid;
+grid-template-columns:70px 1fr 140px 110px;
+gap:10px;
+align-items:center;
+}
+
+.table-head{
+padding:10px 12px;
+color:#bbb;
+border-bottom:1px solid #2f2f2f;
+margin-bottom:10px;
+}
+
+.service-row{
+background:#222;
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.row-index{
+font-weight:bold;
+color:#ffdf7e;
+}
+
+.service-name{
+display:flex;
+align-items:center;
+gap:10px;
+min-width:0;
+}
+
+.service-title{
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.service-price{
+color:#7ee2ff;
+font-weight:bold;
+}
+
+.service-name input[type="checkbox"]{
+transform:scale(1.2);
+accent-color:#31c48d;
+}
+
+/* =========================
+ACTION ICONS
+========================= */
+
+.actions-icons{
+display:flex;
+gap:8px;
+}
+
+.icon-btn{
+width:36px;
+height:36px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+background:#2d2d2d;
+color:#fff;
+transition:.2s;
+}
+
+.icon-btn:hover{
+background:#3a3a3a;
+transform:translateY(-2px);
+}
+
+.icon-btn.edit{
+color:#ffd166;
+}
+
+.icon-btn.delete{
+color:#ff6b6b;
+}
+
+/* =========================
+ADD SERVICE
+========================= */
+
+.add-box{
+display:grid;
+grid-template-columns:1fr 180px 160px;
+gap:10px;
+margin-top:16px;
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+button{
+border:none;
+border-radius:12px;
+cursor:pointer;
+color:#fff;
+font-weight:bold;
+transition:.2s;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.add-box button{
+background:#0ea5e9;
+padding:11px;
+}
+
+.actions{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:16px;
+}
+
+.actions button{
+padding:12px;
+}
+
+#saveInvoiceBtn{
+background:#16a34a;
+}
+
+#smsBtn{
+background:#8b5cf6;
+}
+
+#resetBtn{
+background:#dc2626;
+}
+
+/* =========================
+TOTAL
+========================= */
+
+.total-box{
+margin-top:18px;
+background:#0f172a;
+border:1px solid #1f2a44;
+border-radius:14px;
+padding:14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:18px;
+}
+
+#total-display{
+color:#7cff9c;
+font-weight:bold;
+}
+
+/* =========================
+HISTORY
+========================= */
+
+.history-box{
+margin-top:25px;
+background:#181818;
+border:1px solid #2c2c2c;
+border-radius:14px;
+padding:15px;
+}
+
+.history-header-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+.history-header-top h3{
+margin:0;
+}
+
+#searchInvoice{
+min-width:220px;
+}
+
+.history-item{
+background:#222;
+border:1px solid #303030;
+border-radius:12px;
+padding:12px;
+margin-bottom:12px;
+}
+
+.history-info{
+display:flex;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.history-customer{
+font-weight:bold;
+color:#fff;
+}
+
+.history-date{
+color:#bbb;
+margin-top:4px;
+}
+
+.history-total{
+color:#7cff9c;
+font-weight:bold;
+}
+
+.history-actions{
+display:flex;
+gap:8px;
+margin-top:12px;
+flex-wrap:wrap;
+}
+
+.history-actions button{
+padding:8px 12px;
+border-radius:8px;
+}
+
+.view-btn{
+background:#2563eb;
+}
+
+.load-btn{
+background:#0ea5e9;
+}
+
+.edit-btn{
+background:#f59e0b;
+}
+
+.delete-btn{
+background:#dc2626;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:700px){
+
+.table-head,
+.service-row{
+grid-template-columns:50px 1fr 100px 90px;
+}
+
+.add-box{
+grid-template-columns:1fr;
+}
+
+.actions{
+grid-template-columns:1fr;
+}
+
+.history-info{
+flex-direction:column;
+}
+
+#searchInvoice{
+width:100%;
+min-width:auto;
+}
+}
+
+/* =========================
+PRINT
+========================= */
+
+@media print{
+
+body{
+background:#fff;
+color:#000;
+}
+
+.invoice-card{
+background:#fff;
+color:#000;
+border:none;
+box-shadow:none;
+}
+
+.no-print,
+.history-box,
+.actions-icons,
+.service-name input[type="checkbox"]{
+display:none !important;
+}
+
+.service-row{
+background:#fff;
+border:1px solid #ccc;
+color:#000;
+}
+
+.service-price{
+color:#000;
+}
+
+.table-head{
+color:#000;
+border-bottom:1px solid #000;
+}
+
+.total-box{
+background:#fff;
+color:#000;
+border:1px solid #000;
+}
+
+#total-display{
+color:#000;
+}
+}
