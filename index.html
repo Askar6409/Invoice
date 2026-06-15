@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تراشکاری عساکره</title>  <link rel="stylesheet" href="style.css">  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head><body>  <div class="app"><div class="invoice-card" id="invoiceCard">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>تراشکاری عساکره</h1>
+    <h2>فاکتور خدمات</h2>
+
+    <div class="date-row">
+      <span>تاریخ:</span>
+      <span id="current-date"></span>
+
+      <span class="separator">|</span>
+
+      <span>ساعت:</span>
+      <span id="current-time"></span>
+    </div>
+  </div>
+
+  <!-- Customer -->
+  <div class="customer-box no-print">
+    <label for="customerName">نام مشتری:</label>
+    <input type="text"
+           id="customerName"
+           placeholder="نام مشتری را وارد کنید">
+  </div>
+
+  <!-- Table Header -->
+  <div class="table-head">
+    <span>ردیف</span>
+    <span>محصول / خدمت</span>
+    <span>قیمت</span>
+    <span>عملیات</span>
+  </div>
+
+  <!-- Services -->
+  <div id="services-list"></div>
+
+  <!-- Add Service -->
+  <div class="add-box no-print">
+    <input type="text"
+           id="newServiceName"
+           placeholder="نام خدمت جدید">
+
+    <input type="number"
+           id="newServicePrice"
+           placeholder="قیمت">
+
+    <button id="addServiceBtn">
+      افزودن خدمت
+    </button>
+  </div>
+
+  <!-- Total -->
+  <div class="total-box">
+    <span>مجموع:</span>
+    <strong id="total-display">0 تومان</strong>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions no-print">
+
+    <button id="saveInvoiceBtn">
+      ذخیره فاکتور
+    </button>
+
+    <button id="smsBtn">
+      متن SMS
+    </button>
+
+    <button id="resetBtn">
+      فاکتور جدید
+    </button>
+
+  </div>
+
+  <!-- SMS -->
+  <textarea
+    id="smsText"
+    class="sms-box no-print"
+    readonly>
+  </textarea>
+
+  <!-- History -->
+  <div class="history-box no-print">
+
+    <div class="history-header-top">
+
+      <h3>📚 تاریخچه فاکتورها</h3>
+
+      <input
+        type="text"
+        id="searchInvoice"
+        placeholder="جستجو نام مشتری...">
+    </div>
+
+    <div id="historyList"></div>
+
+  </div>
+
+</div>
+
+  </div>  <script src="app.js"></script></body></html>
