@@ -65,7 +65,7 @@ second: "2-digit"
 }
 
 /* =========================
-MONEY
+MONEY (تومان)
 ========================= */
 
 function formatMoney(value) {
@@ -77,7 +77,6 @@ return Number(value || 0)
 
 /* =========================
 DEFAULT SERVICES
-(تومان)
 ========================= */
 
 function defaultServices() {
@@ -138,7 +137,7 @@ return [
 }
 
 /* =========================
-LOCAL STORAGE
+STORAGE
 ========================= */
 
 function loadState() {
@@ -146,12 +145,16 @@ function loadState() {
 const saved =
 localStorage.getItem(STORAGE_KEY);
 
-if(saved){
+if (saved) {
 
-const data = JSON.parse(saved);
+const data =
+JSON.parse(saved);
 
-data.date = getTodayPersian();
-data.time = getCurrentTimePersian();
+data.date =
+getTodayPersian();
+
+data.time =
+getCurrentTimePersian();
 
 return data;
 
@@ -187,8 +190,11 @@ HISTORY
 function loadHistory() {
 
 return JSON.parse(
-localStorage.getItem(HISTORY_KEY)
-|| "[]"
+
+localStorage.getItem(
+  HISTORY_KEY
+) || "[]"
+
 );
 
 }
@@ -196,8 +202,11 @@ localStorage.getItem(HISTORY_KEY)
 function saveHistory(history) {
 
 localStorage.setItem(
+
 HISTORY_KEY,
+
 JSON.stringify(history)
+
 );
 
 }
@@ -209,13 +218,15 @@ STATE
 let state = loadState();
 
 /* =========================
-SERVICES
+CALCULATIONS
 ========================= */
 
 function getSelectedServices() {
 
 return state.services.filter(
+
 service => service.selected
+
 );
 
 }
@@ -223,16 +234,21 @@ service => service.selected
 function getTotal() {
 
 return getSelectedServices()
+
 .reduce(
+
 (sum, service) =>
+
 sum + Number(service.price || 0),
+
 0
+
 );
 
 }
 
 /* =========================
-SMS
+SMS BUILDER
 ========================= */
 
 function buildSmsText() {
@@ -251,7 +267,7 @@ text +=
 "ساعت: ${state.time}\n";
 
 text +=
-"مشتری: ${state.customerName || "-"}\n";
+"نام مشتری: ${state.customerName || "-"}\n";
 
 text +=
 "----------------------\n";
@@ -261,18 +277,21 @@ if(selected.length === 0){
 text +=
 "خدمتی انتخاب نشده است.\n";
 
-}else{
+} else {
 
 selected.forEach(
+
   (service,index)=>{
 
-  text +=
-  `${index+1}. ${service.name}
+    text +=
+    `${index + 1}. ${service.name}
 
 - ${formatMoney(service.price)}
   تومان\n`;
   
-  });
+  }
+  
+  );
 
 }
 
@@ -284,4 +303,321 @@ text +=
 
 return text;
 
-                 }
+}
+/* =========================
+UPDATE TOTAL
+========================= */
+
+function updateTotal() {
+
+totalDisplay.textContent =
+"${formatMoney(getTotal())} تومان";
+
+smsText.value =
+buildSmsText();
+
+}
+
+/* =========================
+RENDER SERVICES
+========================= */
+
+function render() {
+
+currentDate.textContent =
+state.date;
+
+currentTime.textContent =
+state.time;
+
+customerNameInput.value =
+state.customerName || "";
+
+servicesList.innerHTML = "";
+
+state.services.forEach(
+(service,index)=>{
+
+  const row =
+  document.createElement("div");
+
+  row.className =
+  "service-row";
+
+  row.innerHTML = `
+
+  <div class="row-index">
+
+    ${index + 1}
+
+  </div>
+
+  <div class="service-name">
+
+    <input
+      type="checkbox"
+      data-id="${service.id}"
+      ${service.selected ? "checked" : ""}>
+
+    <span class="service-title">
+
+      ${service.name}
+
+    </span>
+
+  </div>
+
+  <div class="service-price">
+
+    ${formatMoney(service.price)}
+    تومان
+
+  </div>
+
+  <div class="actions-icons">
+
+    <button
+      class="icon-btn edit"
+      data-edit="${service.id}">
+
+      <i class='bx bx-pencil'></i>
+
+    </button>
+
+    <button
+      class="icon-btn delete"
+      data-delete="${service.id}">
+
+      <i class='bx bx-trash'></i>
+
+    </button>
+
+  </div>
+
+  `;
+
+  servicesList.appendChild(row);
+
+}
+
+);
+
+updateTotal();
+
+saveState();
+
+}
+
+/* =========================
+CHECKBOX CHANGE
+========================= */
+
+servicesList.addEventListener(
+"change",
+(e)=>{
+
+if(
+  e.target.matches(
+  'input[type="checkbox"][data-id]'
+  )
+){
+
+  const id =
+  e.target.dataset.id;
+
+  const service =
+  state.services.find(
+    s => s.id === id
+  );
+
+  if(service){
+
+    service.selected =
+    e.target.checked;
+
+    updateTotal();
+
+    saveState();
+
+  }
+
+}
+
+}
+);
+
+/* =========================
+EDIT & DELETE
+========================= */
+
+servicesList.addEventListener(
+"click",
+(e)=>{
+
+const editBtn =
+e.target.closest("[data-edit]");
+
+const deleteBtn =
+e.target.closest("[data-delete]");
+
+/* EDIT */
+
+if(editBtn){
+
+  const id =
+  editBtn.dataset.edit;
+
+  const service =
+  state.services.find(
+    s => s.id === id
+  );
+
+  if(!service) return;
+
+  const newName =
+  prompt(
+    "نام خدمت:",
+    service.name
+  );
+
+  if(newName === null)
+  return;
+
+  const newPrice =
+  prompt(
+    "قیمت (تومان):",
+    service.price
+  );
+
+  if(newPrice === null)
+  return;
+
+  const price =
+  Number(newPrice);
+
+  if(
+    !newName.trim()
+    ||
+    isNaN(price)
+  ){
+
+    alert(
+      "اطلاعات نامعتبر است"
+    );
+
+    return;
+
+  }
+
+  service.name =
+  newName.trim();
+
+  service.price =
+  price;
+
+  render();
+
+}
+
+/* DELETE */
+
+if(deleteBtn){
+
+  const id =
+  deleteBtn.dataset.delete;
+
+  const service =
+  state.services.find(
+    s => s.id === id
+  );
+
+  if(!service) return;
+
+  if(
+    confirm(
+      `حذف "${service.name}" ؟`
+    )
+  ){
+
+    state.services =
+    state.services.filter(
+      s => s.id !== id
+    );
+
+    render();
+
+  }
+
+}
+
+}
+);
+
+/* =========================
+ADD SERVICE
+========================= */
+
+addServiceBtn.addEventListener(
+"click",
+()=>{
+
+const name =
+newServiceNameInput.value.trim();
+
+const price =
+Number(
+  newServicePriceInput.value
+);
+
+if(
+  !name ||
+  isNaN(price) ||
+  price <= 0
+){
+
+  alert(
+    "نام و قیمت معتبر وارد کنید"
+  );
+
+  return;
+
+}
+
+state.services.push({
+
+  id:
+  crypto.randomUUID(),
+
+  name,
+
+  price,
+
+  selected:false
+
+});
+
+newServiceNameInput.value = "";
+newServicePriceInput.value = "";
+
+render();
+
+}
+);
+
+/* =========================
+CUSTOMER NAME
+========================= */
+
+customerNameInput.addEventListener(
+"input",
+()=>{
+
+state.customerName =
+customerNameInput.value;
+
+saveState();
+
+updateTotal();
+
+}
+);
