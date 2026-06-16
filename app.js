@@ -621,3 +621,408 @@ updateTotal();
 
 }
 );
+
+/* =========================
+HISTORY RENDER
+========================= */
+
+function renderHistory(filter = "") {
+
+const history =
+loadHistory();
+
+historyList.innerHTML = "";
+
+const filtered =
+history.filter(invoice =>
+
+invoice.customer
+.toLowerCase()
+.includes(
+  filter.toLowerCase()
+)
+
+);
+
+filtered.reverse().forEach(
+invoice => {
+
+  const item =
+  document.createElement("div");
+
+  item.className =
+  "history-item";
+
+  item.innerHTML = `
+
+  <div class="history-info">
+
+    <div>
+
+      <div class="history-customer">
+
+        ${invoice.customer || "-"}
+
+      </div>
+
+      <div class="history-date">
+
+        ${invoice.date}
+        |
+        ${invoice.time}
+
+      </div>
+
+    </div>
+
+    <div class="history-total">
+
+      ${formatMoney(invoice.total)}
+      تومان
+
+    </div>
+
+  </div>
+
+  <div class="history-actions">
+
+    <button
+      class="view-btn"
+      onclick="viewInvoice('${invoice.id}')">
+
+      مشاهده
+
+    </button>
+
+    <button
+      class="load-btn"
+      onclick="loadInvoice('${invoice.id}')">
+
+      بارگذاری
+
+    </button>
+
+    <button
+      class="delete-btn"
+      onclick="deleteInvoice('${invoice.id}')">
+
+      حذف
+
+    </button>
+
+  </div>
+
+  `;
+
+  historyList.appendChild(item);
+
+});
+
+}
+
+/* =========================
+SAVE INVOICE
+========================= */
+
+saveInvoiceBtn.addEventListener(
+"click",
+()=>{
+
+const selected =
+getSelectedServices();
+
+if(selected.length === 0){
+
+  alert(
+    "حداقل یک خدمت انتخاب کنید"
+  );
+
+  return;
+
+}
+
+const history =
+loadHistory();
+
+history.push({
+
+  id:
+  crypto.randomUUID(),
+
+  customer:
+  state.customerName,
+
+  date:
+  getTodayPersian(),
+
+  time:
+  getCurrentTimePersian(),
+
+  total:
+  getTotal(),
+
+  services:
+  JSON.parse(
+    JSON.stringify(selected)
+  )
+
+});
+
+saveHistory(history);
+
+renderHistory();
+
+alert(
+  "فاکتور ذخیره شد"
+);
+
+}
+);
+
+/* =========================
+VIEW INVOICE
+========================= */
+
+window.viewInvoice =
+function(id){
+
+const history =
+loadHistory();
+
+const invoice =
+history.find(
+x => x.id === id
+);
+
+if(!invoice) return;
+
+let text = "";
+
+text +=
+"مشتری: ${invoice.customer}\n\n";
+
+text +=
+"تاریخ: ${invoice.date}\n";
+
+text +=
+"ساعت: ${invoice.time}\n\n";
+
+invoice.services.forEach(
+(s,index)=>{
+
+  text +=
+  `${index+1}. ${s.name}
+
+- ${formatMoney(s.price)}
+  تومان\n`;
+  
+  }
+  );
+
+text +=
+"\nمجموع: ${formatMoney(invoice.total)} تومان";
+
+alert(text);
+
+};
+
+/* =========================
+LOAD INVOICE
+========================= */
+
+window.loadInvoice =
+function(id){
+
+const history =
+loadHistory();
+
+const invoice =
+history.find(
+x => x.id === id
+);
+
+if(!invoice) return;
+
+state.customerName =
+invoice.customer;
+
+state.services.forEach(
+service => {
+
+  service.selected = false;
+
+  invoice.services.forEach(
+    selected => {
+
+      if(
+        selected.name ===
+        service.name
+      ){
+
+        service.selected =
+        true;
+
+      }
+
+    }
+  );
+
+}
+
+);
+
+render();
+
+alert(
+"فاکتور بارگذاری شد"
+);
+
+};
+
+/* =========================
+DELETE INVOICE
+========================= */
+
+window.deleteInvoice =
+function(id){
+
+if(
+!confirm(
+"فاکتور حذف شود؟"
+)
+){
+return;
+}
+
+let history =
+loadHistory();
+
+history =
+history.filter(
+item => item.id !== id
+);
+
+saveHistory(history);
+
+renderHistory();
+
+};
+
+/* =========================
+SEARCH
+========================= */
+
+searchInvoice.addEventListener(
+"input",
+()=>{
+
+renderHistory(
+  searchInvoice.value
+);
+
+}
+);
+
+/* =========================
+RESET
+========================= */
+
+resetBtn.addEventListener(
+"click",
+()=>{
+
+if(
+  !confirm(
+  "فاکتور جدید ایجاد شود؟"
+  )
+){
+  return;
+}
+
+state.customerName = "";
+
+state.date =
+getTodayPersian();
+
+state.time =
+getCurrentTimePersian();
+
+state.services.forEach(
+  service => {
+
+    service.selected =
+    false;
+
+  }
+);
+
+render();
+
+}
+);
+
+/* =========================
+SMS
+========================= */
+
+smsBtn.addEventListener(
+"click",
+async ()=>{
+
+const text =
+buildSmsText();
+
+smsText.value =
+text;
+
+try{
+
+  await navigator
+  .clipboard
+  .writeText(text);
+
+  alert(
+    "متن پیامک کپی شد"
+  );
+
+}catch{
+
+  smsText.select();
+
+  document.execCommand(
+    "copy"
+  );
+
+  alert(
+    "متن پیامک کپی شد"
+  );
+
+}
+
+}
+);
+
+/* =========================
+CLOCK
+========================= */
+
+setInterval(()=>{
+
+currentTime.textContent =
+getCurrentTimePersian();
+
+},1000);
+
+/* =========================
+START
+========================= */
+
+render();
+
+renderHistory();
+
+currentDate.textContent =
+getTodayPersian();
+
+currentTime.textContent =
+getCurrentTimePersian();
